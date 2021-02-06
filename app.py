@@ -93,5 +93,30 @@ def getData():
     return jsonify(data)
 
 
+@app.route("/api/live", methods=["POST"])
+def live():
+    json_file = open(f"{APP_ROOT}/db/live.json", "r")
+    data = json.load(json_file)
+    json_file.close()
+    text = request.form.get("liveData")
+    data = {
+        "data": f"{text}"
+    }
+    json_file = open(f"{APP_ROOT}/db/live.json", "w")
+    json_file.seek(0)
+    json.dump(data, json_file, indent=2)
+    json_file.close()
+    return jsonify({"message": "ok"})
+
+
+@app.route("/api/live/get")
+def getLiveData():
+    resp = {}
+    json_file = open(f"{APP_ROOT}/db/live.json", "r")
+    resp = json.load(json_file)
+    json_file.close()
+    return jsonify(resp)
+
+
 if __name__=="__main__":
     app.run(port=5001, host='0.0.0.0', debug=True)
